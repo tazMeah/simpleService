@@ -10,6 +10,95 @@
 
     <my-component></my-component>
 
+    <h3>index.html</h3>
+    <pre>
+        &lt;!DOCTYPE html&gt;
+        &lt;html lang="en" ng-app="myApp"&gt;
+        &lt;head&gt;
+            &lt;meta charset="UTF-8"&gt;
+            &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+            &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;
+            &lt;title&gt;Service&lt;/title&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+        
+            &lt;my-component&gt;&lt;/my-component&gt;
+        
+            &lt;script src="https://code.angularjs.org/1.6.5/angular.min.js"&gt;&lt;/script&gt;
+            &lt;script src="module.js"&gt;&lt;/script&gt;
+            &lt;script src="component.js"&gt;&lt;/script&gt;
+            &lt;script src="service.js"&gt;&lt;/script&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+    </pre>
+
+    <h3>module.js</h3>
+    <pre>
+        "use strict";
+        var app = angular.module("myApp", [])    
+    </pre>
+
+    <h3>component.js</h3>
+    <pre>
+        "use strict";
+
+        const myComponent = {
+            template: `
+            &lt;form&gt;
+            &lt;input type="text" placeholder="add a student" ng-model="newStudent"&gt;
+            &lt;button type="submit" ng-click="$ctrl.addStudent(newStudent)"&gt;Add&lt;/button&gt;
+            &lt;/form&gt;
+            &lt;li ng-repeat="person in $ctrl.classmates"&gt;{{person}}&lt;/li&gt;
+            `,
+            controller: ["Service", function(Service){
+                const vm = this;
+                
+                vm.classmates = Service.getStudents(); // Service.getStudents returns the list of students from service.js
+        
+                vm.addStudent = function(newStudent){
+                    Service.setStudents(newStudent);
+                };
+            }]
+        }
+        
+        app.component("myComponent", myComponent)
+    </pre>
+
+    <h3>service.js</h3>
+    <pre>
+        "use strict";
+
+        const Service = function() {
+            this.names = [];
+            this.classmates = [
+                "Adrean",
+                "Ashley",
+                "Ben",
+                "Chelsye",
+                "Jalen",
+                "John",
+                "Johnathan",
+                "Katie",
+                "Ken",
+                "Matty",
+                "Sydney",
+                "Taz",
+                "Tremell",
+                "Zavier"
+            ];
+            this.getStudents = function() {
+                return this.classmates;
+            };
+            this.setStudents = function(newStudent) {
+                this.classmates.unshift(newStudent);
+                document.querySelector("input").value = ""; // this line is optional. It just clears the input upon submission
+            };
+        }
+        
+        
+        app.service("Service", Service)
+    </pre>
+
     <script src="https://code.angularjs.org/1.6.5/angular.min.js"></script>
     <script src="module.js"></script>
     <script src="component.js"></script>
